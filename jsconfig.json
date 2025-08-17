@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "module": "esnext",
+    "target": "esnext",
+    "baseUrl": "./",
+    "jsx": "preserve"
+  },
+  "vueCompilerOptions": {
+    "globalTypesPath": "../../pbstar-admin/node_modules/vue/global-types"
+  },
+  "exclude": ["node_modules"]
+}
