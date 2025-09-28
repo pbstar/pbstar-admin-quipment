@@ -6,12 +6,9 @@
     "jsx": "preserve",
     "paths": {
       "@/*": ["src/*"],
-      "@Pcomponents/*": ["../../pbstar-admin/components/*"],
-      "@Passets/*": ["../../pbstar-admin/assets/*"]
+      "@Pcomponents/*": ["../../components/*"],
+      "@Passets/*": ["../../assets/*"]
     }
-  },
-  "vueCompilerOptions": {
-    "globalTypesPath": "../../pbstar-admin/node_modules/vue/global-types"
   },
   "exclude": ["node_modules"]
 }
