@@ -66,22 +66,20 @@ const searchData = ref([
 const searchValue = ref({});
 
 onMounted(() => {
+  const sexOptions = [
+    { label: "特种设备", value: "1" },
+    { label: "非特种设备", value: "2" },
+  ]
   tableRef.value.toChangeColumn([
     {
       key: "sex",
-      options: [
-        { label: "男", value: "1" },
-        { label: "女", value: "2" },
-      ],
+      options: sexOptions,
     },
   ]);
   searchRef.value.toChangeData([
     {
       key: "sex",
-      options: [
-        { label: "男", value: "1" },
-        { label: "女", value: "2" },
-      ],
+      options: sexOptions,
     },
   ]);
   initTable();
