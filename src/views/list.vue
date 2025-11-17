@@ -32,9 +32,7 @@
 import { ref, onMounted } from "vue";
 import { ElMessage } from "element-plus";
 import request from "@Passets/utils/request";
-import PTable from "@Pcomponents/base/p-table/index.vue";
-import PSearch from "@Pcomponents/base/p-search/index.vue";
-import PTitle from "@Pcomponents/base/p-title/index.vue";
+import { PTable, PSearch, PTitle } from "@Pcomponents";
 const data = ref([]);
 const column = ref([
   { key: "name", label: "设备名称" },
