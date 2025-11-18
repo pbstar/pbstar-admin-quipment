@@ -12,18 +12,27 @@
       ref="tableRef"
       :data="data"
       :column="column"
-      :topBtn="topBtn"
-      :rightBtn="rightBtn"
       tableKey="table1"
       showSetting
       :pagination="pagination"
       @paginationChange="toPageChange"
-      @topBtnClick="toTopBtnClick"
-      @rightBtnClick="toRightBtnClick"
     >
       <template #age="scope">
         <span v-show="scope.row.age < 25">{{ scope.row.age }}</span>
         <span v-show="scope.row.age >= 25">{{ scope.row.age }}（老年人）</span>
+      </template>
+      <template #topLeft>
+        <p-button type="primary" @click="toTopBtnClick({ btn: 'add' })"> 新增 </p-button>
+      </template>
+      <template #operation="{ row }">
+        <p-button
+          type="primary"
+          size="small"
+          link
+          @click="toRightBtnClick({ row, btn: 'other' })"
+        >
+          其他
+        </p-button>
       </template>
     </p-table>
   </div>
@@ -32,7 +41,7 @@
 import { ref, onMounted } from "vue";
 import { ElMessage } from "element-plus";
 import request from "@Passets/utils/request";
-import { PTable, PSearch, PTitle } from "@Pcomponents";
+import { PTable, PSearch, PTitle, PButton } from "@Pcomponents";
 const data = ref([]);
 const column = ref([
   { key: "name", label: "设备名称" },
@@ -41,8 +50,6 @@ const column = ref([
   { key: "ethnic", label: "民族", enumKey: "ethnic" },
   { key: "isHealthy", label: "是否健康", enumKey: "boolean" },
 ]);
-const topBtn = ref([{ key: "add", label: "新增", auth: "list_add" }]);
-const rightBtn = ref([{ key: "other", label: "其他" }]);
 const tableRef = ref(null);
 const pagination = ref({
   pageNumber: 1,
