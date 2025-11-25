@@ -11,25 +11,60 @@
       style="margin-top: 10px"
       ref="tableRef"
       :data="data"
-      :column="column"
       :pagination="pagination"
       @paginationChange="toPageChange"
     >
-      <template #age="scope">
-        <span v-show="scope.row.age < 25">{{ scope.row.age }}</span>
-        <span v-show="scope.row.age >= 25">{{ scope.row.age }}（老年人）</span>
+      <template #column>
+        <el-table-column prop="name" label="设备名称" />
+        <el-table-column prop="age" label="服役年限">
+          <template #default="{ row }">
+            <span v-show="row.age < 25">{{ row.age }}</span>
+            <span v-show="row.age >= 25">{{ row.age }}（老年人）</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="sex" label="性别">
+          <template #default="{ row }">
+            {{ getSexLabel(row.sex) }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="ethnic" label="民族">
+          <template #default="{ row }">
+            {{
+              getEnumOptions("ethnic").find((item) => item.value == row.ethnic)
+                ?.label || row.ethnic
+            }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="isHealthy" label="是否健康">
+          <template #default="{ row }">
+            {{
+              getEnumOptions("boolean").find(
+                (item) => item.value == row.isHealthy,
+              )?.label || row.isHealthy
+            }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="operation"
+          label="操作"
+          fixed="right"
+          width="120"
+        >
+          <template #default="{ row }">
+            <p-button
+              type="primary"
+              size="small"
+              link
+              @click="toRightBtnClick({ row, btn: 'other' })"
+            >
+              其他
+            </p-button>
+          </template>
+        </el-table-column>
       </template>
       <template #topLeft>
-        <p-button type="primary" @click="toTopBtnClick({ btn: 'add' })"> 新增 </p-button>
-      </template>
-      <template #operation="{ row }">
-        <p-button
-          type="primary"
-          size="small"
-          link
-          @click="toRightBtnClick({ row, btn: 'other' })"
-        >
-          其他
+        <p-button type="primary" @click="toTopBtnClick({ btn: 'add' })">
+          新增
         </p-button>
       </template>
     </p-table>
@@ -40,14 +75,9 @@ import { ref, onMounted } from "vue";
 import { ElMessage } from "element-plus";
 import request from "@Passets/utils/request";
 import { PTable, PSearch, PTitle, PButton } from "@Pcomponents";
+import { useEnumStore } from "@Passets/stores/enum";
 const data = ref([]);
-const column = ref([
-  { key: "name", label: "设备名称" },
-  { key: "age", label: "服役年限", slot: "age" },
-  { key: "sex", label: "性别" },
-  { key: "ethnic", label: "民族", enumKey: "ethnic" },
-  { key: "isHealthy", label: "是否健康", enumKey: "boolean" },
-]);
+const enumStore = useEnumStore();
 const tableRef = ref(null);
 const pagination = ref({
   pageNumber: 1,
@@ -67,22 +97,29 @@ const searchData = ref([
   },
 ]);
 const searchValue = ref({});
+const sexOptions = ref([
+  { label: "特种设备", value: "1" },
+  { label: "非特种设备", value: "2" },
+]);
 
-onMounted(() => {
-  const sexOptions = [
-    { label: "特种设备", value: "1" },
-    { label: "非特种设备", value: "2" },
-  ]
-  tableRef.value.toChangeColumn([
-    {
-      key: "sex",
-      options: sexOptions,
-    },
-  ]);
+// 根据 value 获取 label
+const getSexLabel = (value) => {
+  const option = sexOptions.value.find((item) => item.value === value);
+  return option ? option.label : value;
+};
+
+// 获取枚举选项（用于响应式显示）
+const getEnumOptions = (enumKey) => {
+  return enumStore.enums[enumKey] || [];
+};
+
+onMounted(async () => {
+  // 预加载枚举数据
+  await enumStore.getEnum("ethnic,boolean");
   searchRef.value.toChangeData([
     {
       key: "sex",
-      options: sexOptions,
+      options: sexOptions.value,
     },
   ]);
   initTable();
@@ -114,7 +151,7 @@ const initTable = () => {
 const toTopBtnClick = ({ btn }) => {
   if (btn == "add") {
     ElMessage.warning(
-      "此页面为外部子应用测试页面，禁止新增，如需新增请前往示例应用"
+      "此页面为外部子应用测试页面，禁止新增，如需新增请前往示例应用",
     );
   }
 };
