@@ -68,7 +68,7 @@
               type="primary"
               size="small"
               link
-              @click="toRightBtnClick({ row, btn: 'other' })"
+              @click="handleOther(row)"
             >
               其他
             </p-button>
@@ -76,9 +76,7 @@
         </el-table-column>
       </template>
       <template #topLeft>
-        <p-button type="primary" @click="toTopBtnClick({ btn: 'add' })">
-          新增
-        </p-button>
+        <p-button type="primary" @click="handleAdd()"> 新增 </p-button>
       </template>
     </p-table>
   </div>
@@ -142,17 +140,13 @@ const initTable = () => {
       }
     });
 };
-const toTopBtnClick = ({ btn }) => {
-  if (btn == "add") {
-    ElMessage.warning(
-      "此页面为外部子应用测试页面，禁止新增，如需新增请前往示例应用",
-    );
-  }
+const handleAdd = () => {
+  ElMessage.warning(
+    "此页面为外部子应用测试页面，禁止新增，如需新增请前往示例应用",
+  );
 };
-const toRightBtnClick = ({ btn, row }) => {
-  if (btn == "other") {
-    ElMessage.success("其他");
-  }
+const handleOther = (row) => {
+  ElMessage.success("其他");
 };
 </script>
 <style lang="scss" scoped>
